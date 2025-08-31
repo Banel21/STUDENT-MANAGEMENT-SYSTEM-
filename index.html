@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SysNexa - Student Management System</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --gray: #95a5a6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            margin-left: 10px;
+        }
+        
+        .logo-icon {
+            font-size: 2rem;
+            color: var(--secondary);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a:hover, 
+        nav ul li a.active {
+            background-color: var(--secondary);
+        }
+        
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .page-header {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+        
+        /* Dashboard */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        
+        .stat-card h3 {
+            color: var(--gray);
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card .value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        /* Forms */
+        .form-container {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--secondary);
+            outline: none;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        /* Tables */
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .action-buttons button {
+            margin-right: 5px;
+        }
+        
+        /* Search and Filters */
+        .search-filters {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .search-box {
+            flex: 1;
+            max-width: 400px;
+        }
+        
+        .filters {
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 500px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 15px;
+                justify-content: center;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-filters {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .search-box {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <span class="logo-icon">📊</span>
+                <h1>SysNexa Student Manager</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="nav-link active" data-page="dashboard">Dashboard</a></li>
+                    <li><a href="#" class="nav-link" data-page="students">Students</a></li>
+                    <li><a href="#" class="nav-link" data-page="add-student">Add Student</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Dashboard Page -->
+        <section id="dashboard" class="page active">
+            <div class="page-header">
+                <h2 class="page-title">Dashboard</h2>
+            </div>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <h3>Total Students</h3>
+                    <div class="value" id="total-students">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Active Students</h3>
+                    <div class="value" id="active-students">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>New This Month</h3>
+                    <div class="value" id="new-students">0</div>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Course</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent-students">
+                        <!-- Recent students will be added here dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Students Page -->
+        <section id="students" class="page">
+            <div class="page-header">
+                <h2 class="page-title">Student Records</h2>
+            </div>
+            
+            <div class="search-filters">
+                <div class="search-box">
+                    <input type="text" class="form-control" placeholder="Search students..." id="search-input">
+                </div>
+                <div class="filters">
+                    <select class="form-control" id="status-filter">
+                        <option value="">All Statuses</option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                    <select class="form-control" id="course-filter">
+                        <option value="">All Courses</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Business">Business</option>
+                        <option value="Engineering">Engineering</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Course</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="students-table-body">
+                        <!-- Students will be added here dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Add Student Page -->
+        <section id="add-student" class="page">
+            <div class="page-header">
+                <h2 class="page-title">Add New Student</h2>
+            </div>
+            
+            <div class="form-container">
+                <form id="student-form">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" class="form-control" id="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" class="form-control" id="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" class="form-control" id="phone">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="course">Course</label>
+                        <select class="form-control" id="course" required>
+                            <option value="">Select a course</option>
+                            <option value="Computer Science">Computer Science</option>
+                            <option value="Business">Business</option>
+                            <option value="Engineering">Engineering</option>
+                            <option value="Medicine">Medicine</option>
+                            <option value="Law">Law</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select class="form-control" id="status" required>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Add Student</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Edit Student Modal -->
+    <div class="modal" id="edit-student-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Student</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="edit-student-form">
+                <input type="hidden" id="edit-id">
+                <div class="form-group">
+                    <label for="edit-name">Full Name</label>
+                    <input type="text" class="form-control" id="edit-name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-email">Email Address</label>
+                    <input type="email" class="form-control" id="edit-email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-phone">Phone Number</label>
+                    <input type="tel" class="form-control" id="edit-phone">
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-course">Course</label>
+                    <select class="form-control" id="edit-course" required>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Business">Business</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="Medicine">Medicine</option>
+                        <option value="Law">Law</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-status">Status</label>
+                    <select class="form-control" id="edit-status" required>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Update Student</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Data storage and initialization
+        let students = JSON.parse(localStorage.getItem('students')) || [];
+        
+        // DOM Elements
+        const navLinks = document.querySelectorAll('.nav-link');
+        const pages = document.querySelectorAll('.page');
+        
+        // Navigation
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.getAttribute('data-page');
+                
+                // Update active navigation link
+                navLinks.forEach(navLink => navLink.classList.remove('active'));
+                link.classList.add('active');
+                
+                // Show the corresponding page
+                pages.forEach(page => {
+                    page.classList.remove('active');
+                    if (page.id === pageId) {
+                        page.classList.add('active');
+                    }
+                });
+                
+                // If navigating to students page, refresh the table
+                if (pageId === 'students') {
+                    renderStudentsTable();
+                } else if (pageId === 'dashboard') {
+                    updateDashboard();
+                }
+            });
+        });
+        
+        // Generate a unique ID for students
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+        
+        // Form submission for adding a new student
+        document.getElementById('student-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const newStudent = {
+                id: generateId(),
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                course: document.getElementById('course').value,
+                status: document.getElementById('status').value,
+                enrollmentDate: new Date().toISOString()
+            };
+            
+            students.push(newStudent);
+            saveStudents();
+            
+            // Reset form
+            document.getElementById('student-form').reset();
+            
+            // Show success message
+            alert('Student added successfully!');
+            
+            // Redirect to students page
+            document.querySelector('[data-page="students"]').click();
+        });
+        
+        // Save students to localStorage
+        function saveStudents() {
+            localStorage.setItem('students', JSON.stringify(students));
+            updateDashboard();
+        }
+        
+        // Render students table
+        function renderStudentsTable(filteredStudents = null) {
+            const tableBody = document.getElementById('students-table-body');
+            const data = filteredStudents || students;
+            
+            tableBody.innerHTML = '';
+            
+            if (data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No students found</td></tr>';
+                return;
+            }
+            
+            data.forEach(student => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${student.id.substr(-6)}</td>
+                    <td>${student.name}</td>
+                    <td>${student.email}</td>
+                    <td>${student.phone || 'N/A'}</td>
+                    <td>${student.course}</td>
+                    <td>${student.status}</td>
+                    <td class="action-buttons">
+                        <button class="btn btn-primary edit-btn" data-id="${student.id}">Edit</button>
+                        <button class="btn btn-danger delete-btn" data-id="${student.id}">Delete</button>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+            
+            // Add event listeners to edit and delete buttons
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const studentId = btn.getAttribute('data-id');
+                    openEditModal(studentId);
+                });
+            });
+            
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const studentId = btn.getAttribute('data-id');
+                    deleteStudent(studentId);
+                });
+            });
+        }
+        
+        // Open edit modal with student data
+        function openEditModal(studentId) {
+            const student = students.find(s => s.id === studentId);
+            
+            if (student) {
+                document.getElementById('edit-id').value = student.id;
+                document.getElementById('edit-name').value = student.name;
+                document.getElementById('edit-email').value = student.email;
+                document.getElementById('edit-phone').value = student.phone || '';
+                document.getElementById('edit-course').value = student.course;
+                document.getElementById('edit-status').value = student.status;
+                
+                document.getElementById('edit-student-modal').classList.add('active');
+            }
+        }
+        
+        // Close edit modal
+        document.querySelector('.close-modal').addEventListener('click', () => {
+            document.getElementById('edit-student-modal').classList.remove('active');
+        });
+        
+        // Edit student form submission
+        document.getElementById('edit-student-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const studentId = document.getElementById('edit-id').value;
+            const studentIndex = students.findIndex(s => s.id === studentId);
+            
+            if (studentIndex !== -1) {
+                students[studentIndex] = {
+                    ...students[studentIndex],
+                    name: document.getElementById('edit-name').value,
+                    email: document.getElementById('edit-email').value,
+                    phone: document.getElementById('edit-phone').value,
+                    course: document.getElementById('edit-course').value,
+                    status: document.getElementById('edit-status').value
+                };
+                
+                saveStudents();
+                renderStudentsTable();
+                
+                document.getElementById('edit-student-modal').classList.remove('active');
+                
+                alert('Student updated successfully!');
+            }
+        });
+        
+        // Delete a student
+        function deleteStudent(studentId) {
+            if (confirm('Are you sure you want to delete this student?')) {
+                students = students.filter(student => student.id !== studentId);
+                saveStudents();
+                renderStudentsTable();
+            }
+        }
+        
+        // Search and filter functionality
+        document.getElementById('search-input').addEventListener('input', filterStudents);
+        document.getElementById('status-filter').addEventListener('change', filterStudents);
+        document.getElementById('course-filter').addEventListener('change', filterStudents);
+        
+        function filterStudents() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const statusFilter = document.getElementById('status-filter').value;
+            const courseFilter = document.getElementById('course-filter').value;
+            
+            const filteredStudents = students.filter(student => {
+                const matchesSearch = student.name.toLowerCase().includes(searchTerm) || 
+                                     student.email.toLowerCase().includes(searchTerm);
+                const matchesStatus = statusFilter ? student.status === statusFilter : true;
+                const matchesCourse = courseFilter ? student.course === courseFilter : true;
+                
+                return matchesSearch && matchesStatus && matchesCourse;
+            });
+            
+            renderStudentsTable(filteredStudents);
+        }
+        
+        // Update dashboard statistics
+        function updateDashboard() {
+            // Update total students
+            document.getElementById('total-students').textContent = students.length;
+            
+            // Update active students
+            const activeStudents = students.filter(student => student.status === 'Active').length;
+            document.getElementById('active-students').textContent = activeStudents;
+            
+            // Update new students this month
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+            const newStudents = students.filter(student => {
+                const enrollmentDate = new Date(student.enrollmentDate);
+                return enrollmentDate.getMonth() === currentMonth && 
+                       enrollmentDate.getFullYear() === currentYear;
+            }).length;
+            
+            document.getElementById('new-students').textContent = newStudents;
+            
+            // Update recent students table
+            const recentStudentsBody = document.getElementById('recent-students');
+            recentStudentsBody.innerHTML = '';
+            
+            // Get the 5 most recent students
+            const recentStudents = [...students]
+                .sort((a, b) => new Date(b.enrollmentDate) - new Date(a.enrollmentDate))
+                .slice(0, 5);
+            
+            recentStudents.forEach(student => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${student.id.substr(-6)}</td>
+                    <td>${student.name}</td>
+                    <td>${student.email}</td>
+                    <td>${student.course}</td>
+                    <td>${student.status}</td>
+                `;
+                
+                recentStudentsBody.appendChild(row);
+            });
+        }
+        
+        // Initialize the application
+        function init() {
+            updateDashboard();
+            
+            // Add some sample data if no students exist
+            if (students.length === 0) {
+                const sampleStudents = [
+                    {
+                        id: generateId(),
+                        name: 'John Doe',
+                        email: 'john.doe@example.com',
+                        phone: '555-1234',
+                        course: 'Computer Science',
+                        status: 'Active',
+                        enrollmentDate: new Date().toISOString()
+                    },
+                    {
+                        id: generateId(),
+                        name: 'Jane Smith',
+                        email: 'jane.smith@example.com',
+                        phone: '555-5678',
+                        course: 'Business',
+                        status: 'Active',
+                        enrollmentDate: new Date(Date.now() - 86400000).toISOString()
+                    },
+                    {
+                        id: generateId(),
+                        name: 'Robert Johnson',
+                        email: 'robert.j@example.com',
+                        phone: '555-9012',
+                        course: 'Engineering',
+                        status: 'Inactive',
+                        enrollmentDate: new Date(Date.now() - 172800000).toISOString()
+                    }
+                ];
+                
+                students = sampleStudents;
+                saveStudents();
+            }
+        }
+        
+        // Run initialization when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
