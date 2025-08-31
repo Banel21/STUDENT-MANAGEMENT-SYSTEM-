@@ -4,17 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SysNexa - Student Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
-            --accent: #e74c3c;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
-            --success: #2ecc71;
-            --warning: #f39c12;
-            --danger: #e74c3c;
-            --gray: #95a5a6;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #94a3b8;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --sidebar-width: 250px;
         }
         
         * {
@@ -25,92 +28,103 @@
         }
         
         body {
-            background-color: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        /* Header Styles */
-        header {
-            background-color: var(--primary);
-            color: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .header-content {
+            background-color: #f1f5f9;
+            color: #334155;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--dark);
+            color: white;
+            padding: 1rem;
+            transition: all 0.3s ease;
+            overflow-y: auto;
         }
         
         .logo {
             display: flex;
             align-items: center;
-        }
-        
-        .logo h1 {
-            font-size: 1.8rem;
-            margin-left: 10px;
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .logo-icon {
             font-size: 2rem;
-            color: var(--secondary);
+            margin-right: 10px;
+            color: var(--primary);
         }
         
-        nav ul {
-            display: flex;
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .nav-links {
             list-style: none;
         }
         
-        nav ul li {
-            margin-left: 20px;
+        .nav-links li {
+            margin-bottom: 0.5rem;
         }
         
-        nav ul li a {
-            color: white;
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            color: var(--gray);
             text-decoration: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            transition: background-color 0.3s;
+            border-radius: 8px;
+            transition: all 0.3s;
         }
         
-        nav ul li a:hover, 
-        nav ul li a.active {
-            background-color: var(--secondary);
+        .nav-links a:hover, 
+        .nav-links a.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .nav-links i {
+            margin-right: 10px;
+            font-size: 1.2rem;
         }
         
         /* Main Content */
-        main {
-            padding: 2rem 0;
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
         }
         
-        .page {
-            display: none;
-        }
-        
-        .page.active {
-            display: block;
-        }
-        
-        .page-header {
-            margin-bottom: 2rem;
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
         }
         
         .page-title {
             font-size: 1.8rem;
-            color: var(--primary);
+            color: var(--dark);
+            font-weight: 600;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
         }
         
         /* Dashboard */
@@ -123,75 +137,124 @@
         
         .stat-card {
             background: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            text-align: center;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            align-items: center;
         }
         
-        .stat-card h3 {
-            color: var(--gray);
-            font-size: 1rem;
-            margin-bottom: 10px;
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-right: 1rem;
         }
         
-        .stat-card .value {
-            font-size: 2.5rem;
-            font-weight: bold;
+        .stat-icon.blue {
+            background: #dbeafe;
             color: var(--primary);
+        }
+        
+        .stat-icon.green {
+            background: #dcfce7;
+            color: var(--success);
+        }
+        
+        .stat-icon.orange {
+            background: #fef3c7;
+            color: var(--warning);
+        }
+        
+        .stat-info h3 {
+            font-size: 0.9rem;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-info .value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark);
         }
         
         /* Forms */
         .form-container {
             background: white;
-            border-radius: 8px;
-            padding: 25px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--card-shadow);
             margin-bottom: 30px;
         }
         
+        .form-title {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 1.2rem;
         }
         
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 0.5rem;
             font-weight: 500;
             color: var(--dark);
         }
         
         .form-control {
             width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 0.8rem 1rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
             font-size: 1rem;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
         }
         
         .form-control:focus {
-            border-color: var(--secondary);
+            border-color: var(--primary);
             outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
         }
         
         .btn {
-            padding: 12px 20px;
+            padding: 0.8rem 1.5rem;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 1rem;
             font-weight: 500;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn i {
+            margin-right: 8px;
         }
         
         .btn-primary {
-            background-color: var(--secondary);
+            background-color: var(--primary);
             color: white;
         }
         
         .btn-primary:hover {
-            background-color: #2980b9;
+            background-color: var(--primary-dark);
         }
         
         .btn-danger {
@@ -200,15 +263,41 @@
         }
         
         .btn-danger:hover {
-            background-color: #c0392b;
+            background-color: #dc2626;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
         }
         
         /* Tables */
         .table-container {
             background: white;
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .table-header {
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .table-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark);
         }
         
         table {
@@ -217,22 +306,75 @@
         }
         
         thead {
-            background-color: var(--primary);
-            color: white;
+            background-color: #f8fafc;
         }
         
         th, td {
-            padding: 15px;
+            padding: 1rem 1.5rem;
             text-align: left;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        th {
+            font-weight: 600;
+            color: var(--secondary);
         }
         
         tbody tr:hover {
-            background-color: #f9f9f9;
+            background-color: #f8fafc;
         }
         
-        .action-buttons button {
-            margin-right: 5px;
+        .status {
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .status.active {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .status.inactive {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .edit-btn {
+            background: #dbeafe;
+            color: var(--primary);
+        }
+        
+        .edit-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .delete-btn {
+            background: #fee2e2;
+            color: var(--danger);
+        }
+        
+        .delete-btn:hover {
+            background: var(--danger);
+            color: white;
         }
         
         /* Search and Filters */
@@ -240,11 +382,25 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 20px;
+            gap: 15px;
         }
         
         .search-box {
             flex: 1;
             max-width: 400px;
+            position: relative;
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+        
+        .search-box input {
+            padding-left: 45px;
         }
         
         .filters {
@@ -264,6 +420,7 @@
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            padding: 1rem;
         }
         
         .modal.active {
@@ -272,18 +429,25 @@
         
         .modal-content {
             background: white;
-            border-radius: 8px;
+            border-radius: 12px;
             width: 100%;
-            max-width: 500px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            max-width: 600px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            overflow: hidden;
         }
         
         .modal-header {
+            padding: 1.2rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--dark);
         }
         
         .close-modal {
@@ -292,75 +456,231 @@
             font-size: 1.5rem;
             cursor: pointer;
             color: var(--gray);
+            transition: color 0.3s;
+        }
+        
+        .close-modal:hover {
+            color: var(--dark);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            padding: 1.2rem 1.5rem;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--secondary);
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: var(--gray);
+        }
+        
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+        
+        .empty-state p {
+            margin-bottom: 1.5rem;
         }
         
         /* Responsive */
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                text-align: center;
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 80px;
+                padding: 1rem 0.5rem;
             }
             
-            nav ul {
-                margin-top: 15px;
+            .logo h1, .nav-links span {
+                display: none;
+            }
+            
+            .logo {
                 justify-content: center;
+            }
+            
+            .nav-links a {
+                justify-content: center;
+                padding: 1rem;
+            }
+            
+            .nav-links i {
+                margin-right: 0;
+                font-size: 1.4rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 1rem;
+            }
+            
+            .logo h1, .nav-links span {
+                display: block;
+            }
+            
+            .logo {
+                justify-content: flex-start;
+            }
+            
+            .nav-links {
+                display: flex;
+                overflow-x: auto;
+                gap: 0.5rem;
+            }
+            
+            .nav-links li {
+                margin-bottom: 0;
+            }
+            
+            .nav-links a {
+                padding: 0.8rem;
+            }
+            
+            .nav-links i {
+                margin-right: 0.5rem;
+            }
+            
+            .search-filters {
+                flex-direction: column;
+            }
+            
+            .search-box {
+                max-width: 100%;
             }
             
             .stats-container {
                 grid-template-columns: 1fr;
             }
             
-            .search-filters {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .search-box {
-                max-width: 100%;
+            .form-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container header-content">
-            <div class="logo">
-                <span class="logo-icon">📊</span>
-                <h1>SysNexa Student Manager</h1>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="#" class="nav-link active" data-page="dashboard">Dashboard</a></li>
-                    <li><a href="#" class="nav-link" data-page="students">Students</a></li>
-                    <li><a href="#" class="nav-link" data-page="add-student">Add Student</a></li>
-                </ul>
-            </nav>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="fas fa-graduation-cap logo-icon"></i>
+            <h1>SysNexa Edu</h1>
         </div>
-    </header>
+        
+        <ul class="nav-links">
+            <li>
+                <a href="#" class="active" data-page="dashboard">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" data-page="students">
+                    <i class="fas fa-user-graduate"></i>
+                    <span>Students</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" data-page="add-student">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Add Student</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" data-page="courses">
+                    <i class="fas fa-book"></i>
+                    <span>Courses</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" data-page="reports">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Reports</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" data-page="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
 
-    <main class="container">
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="header">
+            <h2 class="page-title">Dashboard</h2>
+            <div class="user-info">
+                <img src="https://ui-avatars.com/api/?name=Admin+User&background=2563eb&color=fff" alt="Admin User">
+                <div>
+                    <div>Admin User</div>
+                    <small>Administrator</small>
+                </div>
+            </div>
+        </div>
+
         <!-- Dashboard Page -->
         <section id="dashboard" class="page active">
-            <div class="page-header">
-                <h2 class="page-title">Dashboard</h2>
-            </div>
-            
             <div class="stats-container">
                 <div class="stat-card">
-                    <h3>Total Students</h3>
-                    <div class="value" id="total-students">0</div>
+                    <div class="stat-icon blue">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Total Students</h3>
+                        <div class="value" id="total-students">0</div>
+                    </div>
                 </div>
+                
                 <div class="stat-card">
-                    <h3>Active Students</h3>
-                    <div class="value" id="active-students">0</div>
+                    <div class="stat-icon green">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Active Students</h3>
+                        <div class="value" id="active-students">0</div>
+                    </div>
                 </div>
+                
                 <div class="stat-card">
-                    <h3>New This Month</h3>
-                    <div class="value" id="new-students">0</div>
+                    <div class="stat-icon orange">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Average Grade</h3>
+                        <div class="value">-</div>
+                    </div>
                 </div>
             </div>
             
             <div class="table-container">
+                <div class="table-header">
+                    <h3 class="table-title">Recent Students</h3>
+                    <button class="btn btn-outline">
+                        <i class="fas fa-plus"></i> Add New
+                    </button>
+                </div>
+                
                 <table>
                     <thead>
                         <tr>
@@ -372,7 +692,18 @@
                         </tr>
                     </thead>
                     <tbody id="recent-students">
-                        <!-- Recent students will be added here dynamically -->
+                        <tr>
+                            <td colspan="5">
+                                <div class="empty-state">
+                                    <i class="fas fa-user-graduate"></i>
+                                    <h3>No Students Yet</h3>
+                                    <p>Get started by adding your first student</p>
+                                    <button class="btn btn-primary" id="add-first-student">
+                                        <i class="fas fa-plus"></i> Add Student
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -380,12 +711,9 @@
 
         <!-- Students Page -->
         <section id="students" class="page">
-            <div class="page-header">
-                <h2 class="page-title">Student Records</h2>
-            </div>
-            
             <div class="search-filters">
                 <div class="search-box">
+                    <i class="fas fa-search"></i>
                     <input type="text" class="form-control" placeholder="Search students..." id="search-input">
                 </div>
                 <div class="filters">
@@ -404,6 +732,13 @@
             </div>
             
             <div class="table-container">
+                <div class="table-header">
+                    <h3 class="table-title">Student Records</h3>
+                    <button class="btn btn-primary" id="add-student-btn">
+                        <i class="fas fa-plus"></i> Add Student
+                    </button>
+                </div>
+                
                 <table>
                     <thead>
                         <tr>
@@ -417,7 +752,18 @@
                         </tr>
                     </thead>
                     <tbody id="students-table-body">
-                        <!-- Students will be added here dynamically -->
+                        <tr>
+                            <td colspan="7">
+                                <div class="empty-state">
+                                    <i class="fas fa-user-graduate"></i>
+                                    <h3>No Students Found</h3>
+                                    <p>There are no students in the system yet</p>
+                                    <button class="btn btn-primary" id="add-first-student-2">
+                                        <i class="fas fa-plus"></i> Add Your First Student
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -425,49 +771,76 @@
 
         <!-- Add Student Page -->
         <section id="add-student" class="page">
-            <div class="page-header">
-                <h2 class="page-title">Add New Student</h2>
-            </div>
-            
             <div class="form-container">
+                <h3 class="form-title">Add New Student</h3>
+                
                 <form id="student-form">
-                    <div class="form-group">
-                        <label for="name">Full Name</label>
-                        <input type="text" class="form-control" id="name" required>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" class="form-control" id="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="course">Course</label>
+                            <select class="form-control" id="course" required>
+                                <option value="">Select a course</option>
+                                <option value="Computer Science">Computer Science</option>
+                                <option value="Business">Business</option>
+                                <option value="Engineering">Engineering</option>
+                                <option value="Medicine">Medicine</option>
+                                <option value="Law">Law</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <select class="form-control" id="status" required>
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                        </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" class="form-control" id="email" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="phone">Phone Number</label>
-                        <input type="tel" class="form-control" id="phone">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="course">Course</label>
-                        <select class="form-control" id="course" required>
-                            <option value="">Select a course</option>
-                            <option value="Computer Science">Computer Science</option>
-                            <option value="Business">Business</option>
-                            <option value="Engineering">Engineering</option>
-                            <option value="Medicine">Medicine</option>
-                            <option value="Law">Law</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="status">Status</label>
-                        <select class="form-control" id="status" required>
-                            <option value="Active">Active</option>
-                            <option value="Inactive">Inactive</option>
-                        </select>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary">Add Student</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Student
+                    </button>
                 </form>
+            </div>
+        </section>
+
+        <!-- Other Pages -->
+        <section id="courses" class="page">
+            <div class="empty-state">
+                <i class="fas fa-book"></i>
+                <h3>Course Management</h3>
+                <p>This feature will be available in the next update</p>
+            </div>
+        </section>
+
+        <section id="reports" class="page">
+            <div class="empty-state">
+                <i class="fas fa-chart-bar"></i>
+                <h3>Reports & Analytics</h3>
+                <p>This feature will be available in the next update</p>
+            </div>
+        </section>
+
+        <section id="settings" class="page">
+            <div class="empty-state">
+                <i class="fas fa-cog"></i>
+                <h3>System Settings</h3>
+                <p>This feature will be available in the next update</p>
             </div>
         </section>
     </main>
@@ -476,56 +849,65 @@
     <div class="modal" id="edit-student-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Edit Student</h2>
+                <h3 class="modal-title">Edit Student</h3>
                 <button class="close-modal">&times;</button>
             </div>
-            <form id="edit-student-form">
-                <input type="hidden" id="edit-id">
-                <div class="form-group">
-                    <label for="edit-name">Full Name</label>
-                    <input type="text" class="form-control" id="edit-name" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="edit-email">Email Address</label>
-                    <input type="email" class="form-control" id="edit-email" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="edit-phone">Phone Number</label>
-                    <input type="tel" class="form-control" id="edit-phone">
-                </div>
-                
-                <div class="form-group">
-                    <label for="edit-course">Course</label>
-                    <select class="form-control" id="edit-course" required>
-                        <option value="Computer Science">Computer Science</option>
-                        <option value="Business">Business</option>
-                        <option value="Engineering">Engineering</option>
-                        <option value="Medicine">Medicine</option>
-                        <option value="Law">Law</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="edit-status">Status</label>
-                    <select class="form-control" id="edit-status" required>
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
-                    </select>
-                </div>
-                
-                <button type="submit" class="btn btn-primary">Update Student</button>
-            </form>
+            
+            <div class="modal-body">
+                <form id="edit-student-form">
+                    <input type="hidden" id="edit-id">
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="edit-name">Full Name</label>
+                            <input type="text" class="form-control" id="edit-name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="edit-email">Email Address</label>
+                            <input type="email" class="form-control" id="edit-email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="edit-phone">Phone Number</label>
+                            <input type="tel" class="form-control" id="edit-phone">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="edit-course">Course</label>
+                            <select class="form-control" id="edit-course" required>
+                                <option value="Computer Science">Computer Science</option>
+                                <option value="Business">Business</option>
+                                <option value="Engineering">Engineering</option>
+                                <option value="Medicine">Medicine</option>
+                                <option value="Law">Law</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="edit-status">Status</label>
+                            <select class="form-control" id="edit-status" required>
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancel-edit">Cancel</button>
+                <button class="btn btn-primary" id="save-edit">Save Changes</button>
+            </div>
         </div>
     </div>
 
     <script>
         // Data storage and initialization
-        let students = JSON.parse(localStorage.getItem('students')) || [];
+        let students = JSON.parse(localStorage.getItem('sysnexa_students')) || [];
         
         // DOM Elements
-        const navLinks = document.querySelectorAll('.nav-link');
+        const navLinks = document.querySelectorAll('.nav-links a');
         const pages = document.querySelectorAll('.page');
         
         // Navigation
@@ -543,6 +925,9 @@
                     page.classList.remove('active');
                     if (page.id === pageId) {
                         page.classList.add('active');
+                        document.querySelector('.page-title').textContent = 
+                            page.querySelector('h3') ? page.querySelector('h3').textContent : 
+                            page.querySelector('h2') ? page.querySelector('h2').textContent : 'Page';
                     }
                 });
                 
@@ -581,7 +966,7 @@
             document.getElementById('student-form').reset();
             
             // Show success message
-            alert('Student added successfully!');
+            showNotification('Student added successfully!', 'success');
             
             // Redirect to students page
             document.querySelector('[data-page="students"]').click();
@@ -589,7 +974,7 @@
         
         // Save students to localStorage
         function saveStudents() {
-            localStorage.setItem('students', JSON.stringify(students));
+            localStorage.setItem('sysnexa_students', JSON.stringify(students));
             updateDashboard();
         }
         
@@ -601,7 +986,25 @@
             tableBody.innerHTML = '';
             
             if (data.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No students found</td></tr>';
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state">
+                                <i class="fas fa-user-graduate"></i>
+                                <h3>No Students Found</h3>
+                                <p>There are no students in the system yet</p>
+                                <button class="btn btn-primary" id="add-first-student-3">
+                                    <i class="fas fa-plus"></i> Add Your First Student
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                
+                document.getElementById('add-first-student-3').addEventListener('click', () => {
+                    document.querySelector('[data-page="add-student"]').click();
+                });
+                
                 return;
             }
             
@@ -614,10 +1017,16 @@
                     <td>${student.email}</td>
                     <td>${student.phone || 'N/A'}</td>
                     <td>${student.course}</td>
-                    <td>${student.status}</td>
-                    <td class="action-buttons">
-                        <button class="btn btn-primary edit-btn" data-id="${student.id}">Edit</button>
-                        <button class="btn btn-danger delete-btn" data-id="${student.id}">Delete</button>
+                    <td><span class="status ${student.status.toLowerCase()}">${student.status}</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <div class="action-btn edit-btn" data-id="${student.id}">
+                                <i class="fas fa-edit"></i>
+                            </div>
+                            <div class="action-btn delete-btn" data-id="${student.id}">
+                                <i class="fas fa-trash"></i>
+                            </div>
+                        </div>
                     </td>
                 `;
                 
@@ -657,12 +1066,15 @@
         }
         
         // Close edit modal
-        document.querySelector('.close-modal').addEventListener('click', () => {
+        document.querySelector('.close-modal').addEventListener('click', closeEditModal);
+        document.getElementById('cancel-edit').addEventListener('click', closeEditModal);
+        
+        function closeEditModal() {
             document.getElementById('edit-student-modal').classList.remove('active');
-        });
+        }
         
         // Edit student form submission
-        document.getElementById('edit-student-form').addEventListener('submit', (e) => {
+        document.getElementById('save-edit').addEventListener('click', (e) => {
             e.preventDefault();
             
             const studentId = document.getElementById('edit-id').value;
@@ -681,9 +1093,9 @@
                 saveStudents();
                 renderStudentsTable();
                 
-                document.getElementById('edit-student-modal').classList.remove('active');
+                closeEditModal();
                 
-                alert('Student updated successfully!');
+                showNotification('Student updated successfully!', 'success');
             }
         });
         
@@ -693,6 +1105,8 @@
                 students = students.filter(student => student.id !== studentId);
                 saveStudents();
                 renderStudentsTable();
+                
+                showNotification('Student deleted successfully!', 'success');
             }
         }
         
@@ -727,20 +1141,32 @@
             const activeStudents = students.filter(student => student.status === 'Active').length;
             document.getElementById('active-students').textContent = activeStudents;
             
-            // Update new students this month
-            const currentMonth = new Date().getMonth();
-            const currentYear = new Date().getFullYear();
-            const newStudents = students.filter(student => {
-                const enrollmentDate = new Date(student.enrollmentDate);
-                return enrollmentDate.getMonth() === currentMonth && 
-                       enrollmentDate.getFullYear() === currentYear;
-            }).length;
-            
-            document.getElementById('new-students').textContent = newStudents;
-            
             // Update recent students table
             const recentStudentsBody = document.getElementById('recent-students');
             recentStudentsBody.innerHTML = '';
+            
+            if (students.length === 0) {
+                recentStudentsBody.innerHTML = `
+                    <tr>
+                        <td colspan="5">
+                            <div class="empty-state">
+                                <i class="fas fa-user-graduate"></i>
+                                <h3>No Students Yet</h3>
+                                <p>Get started by adding your first student</p>
+                                <button class="btn btn-primary" id="add-first-student-4">
+                                    <i class="fas fa-plus"></i> Add Student
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                
+                document.getElementById('add-first-student-4').addEventListener('click', () => {
+                    document.querySelector('[data-page="add-student"]').click();
+                });
+                
+                return;
+            }
             
             // Get the 5 most recent students
             const recentStudents = [...students]
@@ -755,52 +1181,78 @@
                     <td>${student.name}</td>
                     <td>${student.email}</td>
                     <td>${student.course}</td>
-                    <td>${student.status}</td>
+                    <td><span class="status ${student.status.toLowerCase()}">${student.status}</span></td>
                 `;
                 
                 recentStudentsBody.appendChild(row);
             });
         }
         
+        // Show notification
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.right = '20px';
+            notification.style.padding = '12px 20px';
+            notification.style.borderRadius = '6px';
+            notification.style.color = 'white';
+            notification.style.fontWeight = '500';
+            notification.style.zIndex = '1000';
+            notification.style.boxShadow = '0 4px 10px rgba(0,0,0,0.1)';
+            notification.style.transform = 'translateX(100%)';
+            notification.style.transition = 'transform 0.3s ease';
+            
+            switch(type) {
+                case 'success':
+                    notification.style.background = '#10b981';
+                    break;
+                case 'error':
+                    notification.style.background = '#ef4444';
+                    break;
+                case 'warning':
+                    notification.style.background = '#f59e0b';
+                    break;
+                default:
+                    notification.style.background = '#3b82f6';
+            }
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Animate out after 3 seconds
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                
+                // Remove after animation completes
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+        
         // Initialize the application
         function init() {
             updateDashboard();
             
-            // Add some sample data if no students exist
-            if (students.length === 0) {
-                const sampleStudents = [
-                    {
-                        id: generateId(),
-                        name: 'John Doe',
-                        email: 'john.doe@example.com',
-                        phone: '555-1234',
-                        course: 'Computer Science',
-                        status: 'Active',
-                        enrollmentDate: new Date().toISOString()
-                    },
-                    {
-                        id: generateId(),
-                        name: 'Jane Smith',
-                        email: 'jane.smith@example.com',
-                        phone: '555-5678',
-                        course: 'Business',
-                        status: 'Active',
-                        enrollmentDate: new Date(Date.now() - 86400000).toISOString()
-                    },
-                    {
-                        id: generateId(),
-                        name: 'Robert Johnson',
-                        email: 'robert.j@example.com',
-                        phone: '555-9012',
-                        course: 'Engineering',
-                        status: 'Inactive',
-                        enrollmentDate: new Date(Date.now() - 172800000).toISOString()
-                    }
-                ];
-                
-                students = sampleStudents;
-                saveStudents();
-            }
+            // Add event listeners for add student buttons
+            document.getElementById('add-first-student').addEventListener('click', () => {
+                document.querySelector('[data-page="add-student"]').click();
+            });
+            
+            document.getElementById('add-first-student-2').addEventListener('click', () => {
+                document.querySelector('[data-page="add-student"]').click();
+            });
+            
+            document.getElementById('add-student-btn').addEventListener('click', () => {
+                document.querySelector('[data-page="add-student"]').click();
+            });
         }
         
         // Run initialization when the DOM is fully loaded
